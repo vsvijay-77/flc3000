@@ -1,0 +1,57 @@
+import 'package:flutter/material.dart';
+
+void main() => runApp(MaterialApp(home: Calculator()));
+
+class Calculator extends StatefulWidget {
+  @override
+  _CalculatorState createState() => _CalculatorState();
+}
+
+class _CalculatorState extends State<Calculator> {
+  final num1 = TextEditingController();
+  final num2 = TextEditingController();
+  String result = '';
+
+  void calculate(String op) {
+    double a = double.tryParse(num1.text) ?? 0;
+    double b = double.tryParse(num2.text) ?? 0;
+    double res = 0;
+
+    if (op == '+') res = a + b;
+    if (op == '-') res = a - b;
+    if (op == '*') res = a * b;
+    if (op == '/') res = b != 0 ? a / b : double.nan;
+
+    setState(() => result = 'Result: $res');
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('Calculator')),
+      body: Padding(
+        padding: EdgeInsets.all(20),
+        child: Column(
+          children: [
+            TextField(
+                controller: num1,
+                decoration: InputDecoration(hintText: 'First number')),
+            TextField(
+                controller: num2,
+                decoration: InputDecoration(hintText: 'Second number')),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: ['+', '-', '*', '/']
+                  .map((op) => ElevatedButton(
+                        onPressed: () => calculate(op),
+                        child: Text(op),
+                      ))
+                  .toList(),
+            ),
+            Text(result, style: TextStyle(fontSize: 24))
+          ],
+        ),
+      ),
+    );
+  }
+}
