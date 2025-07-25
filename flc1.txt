@@ -1,0 +1,68 @@
+import 'package:flutter/material.dart';
+
+void main() => runApp(MaterialApp(home: ContactForm()));
+
+class ContactForm extends StatefulWidget {
+  @override
+  _ContactFormState createState() => _ContactFormState();
+}
+
+class _ContactFormState extends State<ContactForm> {
+  final _formKey = GlobalKey<FormState>();
+  final _name = TextEditingController();
+  final _mobile = TextEditingController();
+  final _email = TextEditingController();
+  final _message = TextEditingController();
+  bool _submitted = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('Contact Form')),
+      body: Padding(
+        padding: EdgeInsets.all(16),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            children: [
+              TextFormField(
+                controller: _name,
+                decoration: InputDecoration(labelText: 'Name'),
+                validator: (value) => value!.isEmpty ? 'Required' : null,
+              ),
+              TextFormField(
+                controller: _mobile,
+                decoration: InputDecoration(labelText: 'Mobile Number'),
+                keyboardType: TextInputType.phone,
+                validator: (value) => value!.isEmpty
+                    ? 'Required'
+                    : !RegExp(r'^\d{10}$').hasMatch(value) ? 'Enter 10 digits' : null,
+              ),
+              TextFormField(
+                controller: _email,
+                decoration: InputDecoration(labelText: 'Email'),
+                keyboardType: TextInputType.emailAddress,
+                validator: (value) => value!.isEmpty
+                    ? 'Required'
+                    : !value.contains('@') ? 'Invalid email' : null,
+              ),
+              TextFormField(
+                controller: _message,
+                decoration: InputDecoration(labelText: 'Message'),
+                validator: (value) => value!.isEmpty ? 'Required' : null,
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  if (_formKey.currentState!.validate()) {
+                    setState(() => _submitted = true);
+                  }
+                },
+                child: Text('Submit'),
+              ),
+              if (_submitted) Text('Submitted!', style: TextStyle(color: Colors.green)),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
